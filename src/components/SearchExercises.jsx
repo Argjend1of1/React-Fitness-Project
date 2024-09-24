@@ -9,13 +9,14 @@ const SearchExercises = ({setExercises, bodyPart, setBodyPart}) => {
   const [search, setSearch]  = useState('');
   const [bodyParts, setBodyParts] = useState([]);
 
+  // this is used to fetch the cards where we scroll horizontally, follow through:
   useEffect(() => {
     const fetchExercisesData = async () => {
       const bodyPartsData = await fetchData(
         'https://exercisedb.p.rapidapi.com/exercises/bodyPartList', options
       )
 
-      setBodyParts(['all', ...bodyPartsData]);
+      setBodyParts(['popular', ...bodyPartsData]);
     }
 
     fetchExercisesData();
@@ -24,7 +25,7 @@ const SearchExercises = ({setExercises, bodyPart, setBodyPart}) => {
   const handleSearch = async () => {
     if(search) {
       const exercisesData = await fetchData(
-        'https://exercisedb.p.rapidapi.com/exercises', options
+        `https://exercisedb.p.rapidapi.com/exercises`, options
       );
 
       const searchedExercises = exercisesData.filter(
