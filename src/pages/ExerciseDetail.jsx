@@ -10,6 +10,8 @@ import SimilarExercises from '../components/SimilarExercises'
 const ExerciseDetail = () => {
   const [exerciseDetail, setExerciseDetail] = useState({});
   const [exerciseVideos, setExerciseVideos] = useState([]);
+  const [targetMuscleExercises, setTargetMuscleExercises] = useState([]);
+  const [equipmentExercises, setEquipmentExercises] = useState([]);
   const { id } = useParams();
 
   useEffect(() => {
@@ -22,12 +24,23 @@ const ExerciseDetail = () => {
         `${exerciseDbURL}/exercises/exercise/${id}`, options
       )
       setExerciseDetail(exerciseDetailData);
+      console.log(exerciseDetailData);
 
       // We only want to fetch videos based on the name of the exercise, therefore we will use the search, to display those videos:
       const exerciseVideosData = await fetchData(
         `${youtubeSearchUrl}/search?query=${exerciseDetailData.name}`, youtubeOptions
       )
       setExerciseVideos(exerciseVideosData.contents);
+
+      const targetMuscleExercisesData = await fetchData(
+        `${exerciseDbURL}/exercises/target/${exerciseDetailData.target}`, options
+      );
+      setTargetMuscleExercises(targetMuscleExercisesData);
+
+      const equipmentExercisesData = await fetchData(
+        `${exerciseDbURL}/exercises/equipment/${exerciseDetailData.equipment}`, options
+      );
+      setEquipmentExercises(equipmentExercisesData);
     }
 
     fetchExerciseData();
@@ -40,7 +53,10 @@ const ExerciseDetail = () => {
         exerciseVideos={exerciseVideos} 
         name={exerciseDetail.name} 
       />
-      <SimilarExercises />
+      <SimilarExercises 
+        targetMuscleExercises={targetMuscleExercises}
+        equipmentExercises={equipmentExercises}
+      />
     </Box>
   )
 }
